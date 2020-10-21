@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery.js"></script>
+
+    <link href="./assets/style.css" type="stylesheet">
+    <title>Tables</title>
+</head>
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-4">Hot Restaurant</h1>
+          <p class="lead">Book your table soon!!</p>
+          <a class="btn btn-primary btn-lg" href="/" role="button">Home</a>
+          <a class="btn btn-success btn-lg" href="/Make" role="button">Make Reservation</a>
+          <br>
+          <br>
+        <h1>Tables Reserved</h1>
+        <br>
+        <div class="row" id="tables">
+        <br>
+        </div>
+        <br>    
+        <h1>WAITLIST</h1>
+        <br>
+        <div class="row" id="waitlist">
+
+        </div>
+
+        </div>
+      </div>
+    
+</body>
+
+<!-- Script -->
+<script type="text/javascript">
+    
+    // Use Jquery .get to go to the route where we have our list of table reservations 
+      $.get("/api/tables/", function(data) {
+        console.log(data);
+        //if server.js has anything stored in the tables array, it returns a card with interpolated values 
+        if (data) {
+            //use the for each for every object in the data array. 
+            //appends to the #tables div 
+            data.forEach(element => {
+                const card = createCard(element);
+                $("#tables").append(card);
+            });
+        }
+            
+            })
+        //functions exactly like the above but the route is to where we are storing the waitlist items 
+     $.get("/api/waitlist", function(data){
+         //functions like the above but writes card to waitlist div
+         if (data) {
+        data.forEach(element => {
+            const card = createCard(element);
+            $("#waitlist").append(card);
+            });
+         }
+        });
+// created a function to write the entire HTML card with interpolate values from the element call
+function createCard(element) {
+    return `<div class="card">
+        <div class="card-header">
+            <!-- make this change at every loop -->
+            <h3><strong>Table</strong></h3>
+          </div>
+
+        <div class="card-body">
+            <h3><strong>Name:</strong>${element.name}</h3>
+              <h3><strong>Phone:</strong>${element.phoneNum}</h3>
+              <h3><strong>Email:</strong>${element.email}</h3>
+              <h3><strong>ID:</strong>${element.id}</h3>
+        </div>
+
+        </div>`
+}
+  </script>
+</html>
